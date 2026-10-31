@@ -62,6 +62,10 @@ To try the current repository version:
 
 The bundled `dist/` files are included, so you do not need to build the extension to install it.
 
+## Privacy
+
+The extension stores settings and captured model metadata locally. It sends selected links and matching requests to the SwarmUI server you configure, with no developer-operated analytics or collection server. Read the [privacy policy](PRIVACY.md) for details about data handling, retention, and deletion.
+
 ## Development
 
 ```sh
