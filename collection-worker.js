@@ -6,9 +6,8 @@ import { matchItems } from './lib/matching.js';
 const matcher = new Matcher({ storage: chrome.storage.local, permissions: chrome.permissions });
 const collector = new Collector({ storage: chrome.storage.local });
 
-// Retire the old lookup alarm/cache when upgrading, including when a worker resumes.
+// Retire the old lookup cache when upgrading, including when a worker resumes.
 async function migrate() {
-  await chrome.alarms.clear('civitai-hash-lookups');
   await chrome.storage.local.remove(['swarmInventory', 'resolveMissingHashes']);
   await collector.migrate();
 }

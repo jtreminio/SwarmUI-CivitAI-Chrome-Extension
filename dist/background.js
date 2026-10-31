@@ -346,7 +346,6 @@
   var matcher = new Matcher({ storage: chrome.storage.local, permissions: chrome.permissions });
   var collector = new Collector({ storage: chrome.storage.local });
   async function migrate() {
-    await chrome.alarms.clear("civitai-hash-lookups");
     await chrome.storage.local.remove(["swarmInventory", "resolveMissingHashes"]);
     await collector.migrate();
   }

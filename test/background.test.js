@@ -17,7 +17,6 @@ test('built worker retains Send to SwarmUI context menu and reuses its target ta
     contextMenus: { onClicked: event('contextClick'), removeAll: callback => callback(), create: (config, callback) => { created.push(config); callback(); } },
     storage: { local: { get: async keys => Object.fromEntries((Array.isArray(keys) ? keys : [keys]).map(key => [key, data[key]])),
       set: async values => Object.assign(data, values), remove: async key => { delete data[key]; } }, onChanged: event('storage') },
-    alarms: { onAlarm: event('alarm'), clear: async () => {}, get: async () => null, create: async () => {} },
     action: { onClicked: event('action') },
     tabs: { create: async options => { created.push(options); return { id: 10 }; },
       get: async () => ({ url: 'http://swarm.local:7801/Text2Image#history', windowId: 1 }),

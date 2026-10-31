@@ -6,11 +6,10 @@ import { CHANNEL } from '../lib/models.js';
 
 const source = await readFile(new URL('../dist/background.js', import.meta.url), 'utf8');
 
-test('built worker sends batch observations to backend, retires legacy queue, and exposes only statuses', async () => {
+test('built worker sends batch observations to backend, retires legacy cache without alarms, and exposes only statuses', async () => {
   const data = { targetUrl: 'http://swarm.test:7801', swarmInventory: { files: ['old-private-file'] }, resolveMissingHashes: true };
   const listeners = {};
   const calls = [];
-  const cleared = [];
   const event = name => ({ addListener: callback => { (listeners[name] ??= []).push(callback); } });
   const chrome = {
     runtime: { id: 'extension', onMessage: event('message'), onInstalled: event('installed'), onStartup: event('startup'),
@@ -19,7 +18,6 @@ test('built worker sends batch observations to backend, retires legacy queue, an
     storage: { local: { get: async keys => structuredClone(Object.fromEntries((Array.isArray(keys) ? keys : [keys]).map(key => [key, data[key]]))),
       set: async values => Object.assign(data, structuredClone(values)),
       remove: async keys => { for (const key of Array.isArray(keys) ? keys : [keys]) delete data[key]; } }, onChanged: event('storage') },
-    alarms: { clear: async name => cleared.push(name) },
     action: { onClicked: event('action') }, contextMenus: { onClicked: event('context') }
   };
   let unknown = false;
@@ -51,7 +49,6 @@ test('built worker sends batch observations to backend, retires legacy queue, an
   assert.ok(!JSON.stringify(data).includes('private'));
   assert.equal(data.swarmInventory, undefined);
   assert.equal(data.resolveMissingHashes, undefined);
-  assert.ok(cleared.includes('civitai-hash-lookups'));
   assert.equal(calls.length, 2);
   assert.deepEqual(calls[1].body.items, [
     { modelId: 42, modelVersionId: 100, modelType: 'Checkpoint', publishedAt: 1000 },
