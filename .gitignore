@@ -1,0 +1,37 @@
+# Dependencies and local package caches
+node_modules/
+/.npm/
+/.cache/
+
+# Logs and generated test/browser reports
+*.log
+npm-debug.log*
+/coverage/
+/.nyc_output/
+/test-results/
+/playwright-report/
+/.playwright-cli/
+
+# Local environment configuration; keep shareable examples
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Packaged extensions and private signing keys
+/*.zip
+*.crx
+*.pem
+
+# Local editor files and operating-system metadata
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+._*
+Thumbs.db
+
+# Intentionally track dist/: manifest.json loads these bundles directly.
+# Also track package-lock.json, documentation screenshots, and test samples.

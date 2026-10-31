@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Send Link to SwarmUI",
+  "description": "Collect Civitai checkpoint and LoRA hashes, and send model links to SwarmUI.",
+  "version": "1.4.1",
+  "minimum_chrome_version": "111",
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": ["https://civitai.com/*", "https://civitai.red/*"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
+  "background": {
+    "service_worker": "dist/background.js"
+  },
+  "action": { "default_title": "View collected Civitai models" },
+  "content_scripts": [
+    {
+      "matches": ["https://civitai.com/*", "https://civitai.red/*"],
+      "js": ["dist/content.js"],
+      "css": ["cards.css"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://civitai.com/*", "https://civitai.red/*"],
+      "js": ["dist/capture.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
+  "options_page": "options.html"
+}

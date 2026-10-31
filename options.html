@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Send to SwarmUI Options</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body {
+        margin: 24px;
+        max-width: 1100px;
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      form {
+        display: grid;
+        gap: 12px;
+      }
+
+      input[type="url"],
+      input[type="text"] {
+        width: 100%;
+        font: inherit;
+        padding: 8px 10px;
+        border: 1px solid #b4b4b4;
+        border-radius: 6px;
+      }
+
+      button {
+        width: fit-content;
+        padding: 8px 14px;
+        border: 0;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .checkbox-row input[type="checkbox"] {
+        margin: 0;
+      }
+
+      #status {
+        min-height: 1.2em;
+      }
+
+      .hint {
+        color: #4d4d4d;
+      }
+
+      section { margin-top: 32px; border-top: 1px solid #ddd; padding-top: 20px; }
+      .actions { display: flex; gap: 12px; margin: 16px 0; }
+      .table-scroll { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { text-align: left; vertical-align: top; padding: 10px 8px; border-bottom: 1px solid #ddd; }
+      th { white-space: nowrap; }
+      td:first-child { max-width: 320px; overflow-wrap: anywhere; }
+      #capture-error { color: #b00020; }
+      input { box-sizing: border-box; }
+    </style>
+  </head>
+  <body>
+    <h1>Send Link to SwarmUI</h1>
+    <form id="options-form">
+      <label for="target-url">SwarmUI Server URL</label>
+      <input id="target-url" name="targetUrl" type="text" placeholder="192.168.1.99:7801">
+      <label class="checkbox-row" for="use-popup-window">
+        <input id="use-popup-window" name="usePopupWindow" type="checkbox">
+        Open SwarmUI in popup window (minimal Chrome UI)
+      </label>
+      <p class="hint">
+        Right-click anything on a web page and choose <strong>Send to SwarmUI</strong>. If clicked on a link,
+        its href is sent; otherwise the current page URL is sent. The extension opens/reuses one target page
+        to navigate to:
+        <code>server-url/Text2Image?downloader=1&url=ENCODED_SOURCE_URL</code>
+        If you omit a scheme, <code>http://</code> is assumed. When popup mode is enabled, first-open uses
+        a popup window and reuses that same tab for later sends.
+      </p>
+      <button type="submit">Save</button>
+      <p id="status" aria-live="polite"></p>
+    </form>
+    <section aria-labelledby="index-heading">
+      <h2 id="index-heading">WhatTheDuck model index</h2>
+      <p id="index-summary" aria-live="polite">Loading index status…</p>
+      <button id="check-index" type="button">Check index</button>
+      <p class="hint">Save grants access to your chosen SwarmUI server. Requires WhatTheDuck’s Civitai matching API.
+        Visible cards recheck every 30 seconds. Refresh SwarmUI’s model list after adding model files so its index can reconcile.
+        Downloaded cards are dimmed and desaturated; hover or keyboard focus restores the preview.
+        Downloaded cards have a muted top bar; confirmed newer versions have an amber top bar and rail.
+        Native chips and menus sit below the top bar.
+        Different and unconfirmed versions keep their normal appearance.</p>
+    </section>
+    <section aria-labelledby="collection-heading">
+      <h2 id="collection-heading">Collected Civitai models</h2>
+      <p class="hint">Browse Models on civitai.com or civitai.red to collect checkpoints and LoRAs.
+        WhatTheDuck matches displayed versions against your local library. Chrome sends no local filenames or credentials to Civitai.</p>
+      <p id="capture-summary" aria-live="polite">Loading collection…</p>
+      <p id="capture-error" role="status"></p>
+      <div class="actions">
+        <button id="export-models" type="button">Export JSON</button>
+      </div>
+      <label for="model-filter">Filter by model name or ID</label>
+      <input id="model-filter" type="search" placeholder="Name, model ID, or version ID">
+      <p class="hint">Listing hashes cover the whole model. They do not confirm the displayed version is downloaded.
+        Chrome captures responses the page already requests; it makes no extra Civitai requests.
+        Unconfirmed means unknown, never proof that a version is absent. No SwarmUI server is needed for capture.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Model</th><th>Type</th><th>Model ID</th><th>Displayed version ID</th><th>Hashes</th><th>Library status</th></tr></thead>
+          <tbody id="model-rows"></tbody>
+        </table>
+      </div>
+      <p id="row-summary"></p>
+    </section>
+    <script src="dist/options.js"></script>
+  </body>
+</html>
